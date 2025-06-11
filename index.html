@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome to Science Quiz</title>
+  <!-- Link to Google Fonts for a stylish font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto+Slab&display=swap" rel="stylesheet" />
+  <style>
+    /* Embedded CSS for styling the welcome page */
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image:url(img2.jpg) ;
+      background-repeat:none;
+      color: white;
+      margin: 0;
+      height: 100vh;
+      display:flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      text-align: center;
+      background-color:black;
+      padding: 40px 60px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      animation: boxOpen 1s ease forwards;
+      overflow: hidden;
+    }
+
+    /* Animated gradient text for the heading */
+    h1 {
+      font-family: 'Roboto Slab', serif;
+      font-size: 3rem;
+      margin-bottom: 20px;
+      background: linear-gradient(270deg, #00b894, #55efc4, #00cec9, #00b894);
+      background-size: 800% 800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientAnimation 10s ease infinite;
+      text-shadow: 0 0 8px rgba(0, 184, 148, 0.7);
+    }
+
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Subtle fade-in and glow effect for paragraph */
+    p {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      font-weight: 500;
+      animation: fadeInGlow 3s ease forwards;
+      opacity: 0;
+      text-shadow: 0 0 5px rgba(0, 184, 148, 0.4);
+    }
+
+    @keyframes fadeInGlow {
+      to {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(0, 184, 148, 0.7);
+      }
+    }
+
+    button {
+      background-color: #00b894;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px #00b894;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background-color: #019875;
+      box-shadow: 0 0 20px #019875;
+    }
+
+    footer {
+      font-family: cursive;
+      color: #00b894;
+      font-size: 1rem;
+      animation: pulse 3s infinite;
+      margin-top: 20px;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        text-shadow: 0 0 5px #00b894;
+      }
+      50% {
+        text-shadow: 0 0 15px #55efc4;
+      }
+    }
+
+    /* Box opening animation for the container */
+    @keyframes boxOpen {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+        height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      80% {
+        height: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+        height: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Science Quiz!</h1>
+    <p>Test your knowledge on various science topics. Are you ready to challenge yourself?</p>
+    <button id="startBtn">Start Quiz</button>
+    <p><footer>Powered by SamTechs</footer></p>
+  </div>
+
+  <script>
+    // JavaScript to redirect to index.html on button click
+    document.getElementById('startBtn').addEventListener('click', () => {
+      window.location.href = 'indexs.html';
+    });
+  </script>
+</body>
+</html>
