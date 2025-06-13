@@ -1,1362 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Science Master Quiz</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome to Science Quiz</title>
+  <!-- Link to Google Fonts for a stylish font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto+Slab&display=swap" rel="stylesheet" />
   <style>
+    /* Embedded CSS for styling the welcome page */
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-image:url(img1.jpg);
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image:url(img2.jpg) ;
       background-repeat:none;
-      background-size:;
-      color: #fff;
+      color: white;
       margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
+      height: 100vh;
+      display:flex;
       justify-content: center;
-    }
-    .quiz-container {
-      background-color:black;
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      padding: 2rem 2.5rem;
-      max-width: 450px;
-      width: 100%;
-      animation: fadeIn 1s;
-      position: relative;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
-    @keyframes fadeIn { from {opacity:0; transform:translateY(30px);} to {opacity:1; transform:translateY(0);} }
-    .header {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
     }
-    .timer {
-      font-size: 1.3rem;
-      background: #263238;
-      padding: 0.3em 0.9em;
-      border-radius: 8px;
-      letter-spacing: 1px;
-    }
-    #calc-btn {
-      background: #00bcd4;
-      border: none;
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      font-size: 1.3rem;
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    #calc-btn:hover { background: #0097a7; }
-    .subject-select {
-      text-align: center;
-      margin-top: 1rem;
-    }
-    .subjects-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin: 1.5rem 0;
-    }
-    .subject-card {
-      background: rgba(255,255,255,0.08);
-      border: none;
-      color: #fff;
-      padding: 1.2rem 2rem;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 5px 10px rgba(0,188,212,0.08);
-      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-      font-weight: 500;
-    }
-    .subject-card:hover {
-      transform: scale(1.07);
-      background: #00bcd4;
-      color: #fff;
-      box-shadow: 0 4px 18px #00bcd4a0;
-    }
-    .timer-settings {
-      margin-top: 1.5rem;
-      font-size: 1rem;
-      color: #b3e5fc;
-    }
-    .timer-settings input {
-      width: 50px;
-      padding: 0.2em;
-      font-size: 1rem;
-      border-radius: 6px;
-      border: none;
-      margin-right: 0.5em;
-      text-align: center;
-    }
-    .quiz-interface {
-      display: none;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .question-container {
-      background: rgba(255,255,255,0.05);
-      border-radius: 12px;
-      padding: 1.5rem 1rem;
-      margin-bottom: 1.2rem;
-      animation: questionEntrance 0.5s;
-    }
-    @keyframes questionEntrance {
-      from { opacity: 0; transform: translateY(20px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-    .question-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.8rem;
-      font-weight: 500;
-      color: #b3e5fc;
-    }
-    .question-text {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-    }
-    .option-btn {
-      background: #263238;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 0.8em 1em;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-      text-align: left;
-    }
-    .option-btn:hover {
-      background: #00bcd4;
-      color: #fff;
-      transform: scale(1.03);
-    }
-    .option-btn.correct {
-      background: #43a047 !important;
-      color: #fff;
-      animation: correctFlash 0.6s;
-    }
-    .option-btn.wrong {
-      background: #e53935 !important;
-      color: #fff;
-      animation: wrongFlash 0.6s;
-    }
-    @keyframes correctFlash { 0%{box-shadow:0 0 0 0 #43a047;} 100%{box-shadow:0 0 0 8px #43a04744;} }
-    @keyframes wrongFlash { 0%{box-shadow:0 0 0 0 #e53935;} 100%{box-shadow:0 0 0 8px #e5393544;} }
-    .progress-bar {
-      height: 7px;
-      background: linear-gradient(90deg, #00bcd4, #43a047);
-      border-radius: 6px;
-      margin-bottom: 1.2rem;
-      transition: width 0.5s;
-      width: 0%;
-    }
-    .explanation {
-      margin-top: 0.8rem;
-      font-size: 0.96rem;
-      color: #ffe082;
-      background: rgba(255,255,255,0.08);
-      border-radius: 7px;
-      padding: 0.5em 0.7em;
-      display: none;
-    }
-    .next-btn, .restart-btn {
-      background: #00bcd4;
-      border: none;
-      color: #fff;
-      border-radius: 8px;
-      padding: 0.7em 1.3em;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1.2rem;
-      transition: background 0.2s;
-      font-weight: 500;
-      display: block;
-      width: 100%;
-    }
-    .next-btn:hover, .restart-btn:hover {
-      background: #0097a7;
-    }
-    .score-summary {
-      text-align: center;
-      margin-top: 1.5rem;
-      font-size: 1.2rem;
-      color: #b3e5fc;
-    }
-    /* Calculator Modal */
-    .calculator-modal {
-      position: fixed;
-      right: 30px;
-      bottom: 30px;
-      background: #212121;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px #000a;
-      width: 260px;
-      padding: 1.2rem 1rem 1.5rem 1rem;
-      z-index: 999;
-      display: none;
-      animation: fadeIn 0.4s;
-    }
-    .calculator-modal.active { display: block;}
-    .calc-display {
-      width: 100%;
-      background: #263238;
-      color: #fff;
-      font-size: 1.3rem;
-      border: none;
-      border-radius: 7px;
-      padding: 0.6em 0.7em;
-      margin-bottom: 1em;
-      text-align: right;
-    }
-    .calc-buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.7em;
-    }
-    .calc-btn {
-      background: #37474f;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 1.1rem;
-      padding: 0.7em 0;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .calc-btn:hover { background: #00bcd4; color: #fff;}
-    .calc-close {
-      position: absolute;
-      top: 10px;
-      right: 18px;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 1.3rem;
-      cursor: pointer;
-    }
-    @media (max-width: 600px) {
-      .quiz-container { padding: 1rem 0.2rem; max-width: 98vw;}
-      .calculator-modal { right: 5px; bottom: 5px; width: 95vw; }
-    }
-    .home-btn {
-      background: #00bcd4;
-      border: none;
-      color: #fff;
-      border-radius: 8px;
-      padding: 0.7em 1.3em;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1.2rem;
-      transition: background 0.2s;
-      font-weight: 500;
-      display: block;
-      width: 100%;
-    }
-    .home-btn:hover {
-      background: #0097a7;
-    }
-    .confirm-modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(20, 20, 40, 0.85);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-}
-.confirm-modal.active {
-  display: flex;
-}
-.confirm-content {
-  background: #263238;
-  color: #fff;
-  padding: 2rem 1.5rem;
-  border-radius: 14px;
-  text-align: center;
-  box-shadow: 0 4px 24px #000a;
-  max-width: 350px;
-  margin: auto;
-}
-.confirm-btn {
-  background: #00bcd4;
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  padding: 0.7em 1.3em;
-  font-size: 1rem;
-  margin: 1em 0.5em 0 0.5em;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.confirm-btn:hover {
-  background: #0097a7;
-}
 
+    .container {
+      text-align: center;
+      background-color:black;
+      padding: 40px 60px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+      animation: boxOpen 1s ease forwards;
+      overflow: hidden;
+    }
+
+    /* Animated gradient text for the heading */
+    h1 {
+      font-family: 'Roboto Slab', serif;
+      font-size: 3rem;
+      margin-bottom: 20px;
+      background: linear-gradient(270deg, #00b894, #55efc4, #00cec9, #00b894);
+      background-size: 800% 800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientAnimation 10s ease infinite;
+      text-shadow: 0 0 8px rgba(0, 184, 148, 0.7);
+    }
+
+    @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    /* Subtle fade-in and glow effect for paragraph */
+    p {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      font-weight: 500;
+      animation: fadeInGlow 3s ease forwards;
+      opacity: 0;
+      text-shadow: 0 0 5px rgba(0, 184, 148, 0.4);
+    }
+
+    @keyframes fadeInGlow {
+      to {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(0, 184, 148, 0.7);
+      }
+    }
+
+    button {
+      background-color: #00b894;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px #00b894;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background-color: #019875;
+      box-shadow: 0 0 20px #019875;
+    }
+
+    footer {
+      font-family: cursive;
+      color: #00b894;
+      font-size: 1rem;
+      animation: pulse 3s infinite;
+      margin-top: 20px;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        text-shadow: 0 0 5px #00b894;
+      }
+      50% {
+        text-shadow: 0 0 15px #55efc4;
+      }
+    }
+
+    /* Box opening animation for the container */
+    @keyframes boxOpen {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+        height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      80% {
+        height: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+        height: auto;
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Welcome to Science Quiz!</h1>
+    <p>Test your knowledge on various science topics. Are you ready to challenge yourself?</p>
+    <button id="startBtn">Start Quiz</button>
+    <p><footer>Powered by SamTechs</footer></p>
+  </div>
 
-  <!-- Calculator Modal -->
-  <div class="calculator-modal" id="calculator">
-    <input type="text" class="calc-display" id="calcDisplay" readonly>
-    <div class="calc-buttons">
-      <button class="calc-btn" onclick="calcInput('7')">7</button>
-      <button class="calc-btn" onclick="calcInput('8')">8</button>
-      <button class="calc-btn" onclick="calcInput('9')">9</button>
-      <button class="calc-btn" onclick="calcInput('/')">÷</button>
-      <button class="calc-btn" onclick="calcInput('4')">4</button>
-      <button class="calc-btn" onclick="calcInput('5')">5</button>
-      <button class="calc-btn" onclick="calcInput('6')">6</button>
-      <button class="calc-btn" onclick="calcInput('*')">×</button>
-      <button class="calc-btn" onclick="calcInput('1')">1</button>
-      <button class="calc-btn" onclick="calcInput('2')">2</button>
-      <button class="calc-btn" onclick="calcInput('3')">3</button>
-      <button class="calc-btn" onclick="calcInput('-')">−</button>
-      <button class="calc-btn" onclick="calcInput('0')">0</button>
-      <button class="calc-btn" onclick="calcInput('.')">.</button>
-      <button class="calc-btn" onclick="calcClear()">C</button>
-      <button class="calc-btn" onclick="calcInput('+')">+</button>
-      <button class="calc-btn" style="grid-column: span 4;" onclick="calcEquals()">=</button>
-    </div>
-  </div>
-  <div class="quiz-container">
-    <div class="header">
-      <button id="calc-btn" onclick="toggleCalculator()" title="Open Calculator">🧮</button>
-      <div class="timer" id="timer">00:00</div>
-    </div>
-    <div class="subject-select" id="subjectSelect">
-      <h2>Choose Your Subject</h2>
-      <div class="subjects-grid">
-        <button class="subject-card" data-subject="physics">Physics<p style="font-size:11px;">39questions</p></button>
-        <button class="subject-card" data-subject="chemistry">Chemistry<p style="font-size:11px;">36questions</p></button>
-        <button class="subject-card" data-subject="biology">Biology<p style="font-size:11px;">37questions</p></button>
-        <button class="subject-card" data-subject="mathematics">Mathematics<p style="font-size:11px;">37questions</p></button>
-        <button class="subject-card" data-subject="english">English <p style="font-size:11px;">37questions</p></button>
-        <button class="subject-card" data-subject="currentaffairs">Current Affairs<p style="font-size:11px;">50questions</p></button>
-      </div>
-      <div class="timer-settings">
-        <label>
-          <p>Select your desired time frame</p>
-          <input type="number" id="quizTime" min="1" max="120" value="10"> minutes per quiz
-        </label>
-        <p><footer style="font-family:cursive; color:lightgoldenrodyellow;">Powered by SamTechs</footer></p>
-      </div>
-    </div>
-    <div class="quiz-interface" id="quizInterface">
-  <div class="progress-bar" id="progressBar"></div>
-  <div class="question-container" id="questionContainer">
-    <div class="question-header">
-      <span class="question-number" id="questionNumber"></span>
-      <span class="question-category" id="questionCategory"></span>
-    </div>
-    <p class="question-text" id="questionText"></p>
-    <div class="options-grid" id="optionsGrid"></div>
-    <div class="explanation" id="explanation"></div>
-  </div>
-  <button class="next-btn" id="nextBtn" style="display:none;">Next</button>
-  <button class="home-btn" id="quitBtn">Submit</button>
-  <div class="score-summary" id="scoreSummary" style="display:none;"></div>
-  <button class="restart-btn" id="restartBtn" style="display:none;">Restart Quiz</button>
-  <p align="center"><strong>Refresh Page To Go Back To Select Subject</strong></p>
- </div>
-
-  </div>
   <script>
-    // --- QUESTIONS DATA (Add more as needed) ---
-    const questions = {
-  physics: [
-    { question: "Which of the following is a vector quantity?", options: ["Speed", "Mass", "Temperature", "Velocity"], answer: 3, explanation: "Velocity has both magnitude and direction." },
-    { question: "What is the principle of conservation of energy?", options: ["Energy can't be created or destroyed", "Energy increases with time", "Energy decreases with use", "Heat energy is always lost"], answer: 0, explanation: "Energy only changes form but total remains constant." },
-    { question: "A car accelerates uniformly from 5 m/s to 15 m/s in 10 seconds. What is its acceleration?", options: ["0.5 m/s²", "2 m/s²", "1 m/s²", "5 m/s²"], answer: 2, explanation: "Using a = (v-u)/t = (15-5)/10 = 1 m/s²" },
-    { question: "What is the SI unit of electric current?", options: ["Volt", "Ampere", "Ohm", "Watt"], answer: 1, explanation: "Electric current is measured in amperes (A)." },
-    { question: "Which law states that pressure exerted by a gas is inversely proportional to its volume at constant temperature?", options: ["Charles's Law", "Boyle's Law", "Gay-Lussac's Law", "Avogadro's Law"], answer: 1, explanation: "Boyle's Law: P ∝ 1/V at constant T." },
-    { question: "What is the frequency of a wave with a wavelength of 2 m and speed 340 m/s?", options: ["170 Hz", "680 Hz", "340 Hz", "85 Hz"], answer: 0, explanation: "Frequency f = v/λ = 340/2 = 170 Hz." },
-    { question: "Which color of light has the shortest wavelength?", options: ["Red", "Blue", "Green", "Violet"], answer: 3, explanation: "Violet has the shortest wavelength in visible spectrum." },
-    { question: "What is the unit of resistance?", options: ["Ohm", "Volt", "Ampere", "Watt"], answer: 0, explanation: "Resistance is measured in ohms (Ω)." },
-    { question: "In a series circuit, the current is:", options: ["Same in all components", "Different in each component", "Zero", "Infinite"], answer: 0, explanation: "Current is the same through all components in series." },
-    { question: "What device is used to measure electric current?", options: ["Voltmeter", "Ammeter", "Ohmmeter", "Galvanometer"], answer: 1, explanation: "An ammeter measures current." },
-    { question: "What is the acceleration due to gravity on Earth?", options: ["9.8 cm/s²", "10 m/s²", "9.8 km/s²", "9.8 m/s²"], answer: 3, explanation: "Standard gravity is 9.8 m/s²." },
-    { question: "Which physical quantity is scalar?", options: ["Force", "Displacement", "Speed", "Velocity"], answer: 2, explanation: "Speed has magnitude only, no direction." },
-    { question: "What is the work done when a force of 10 N moves an object 5 m?", options: ["50 J", "2 J", "15 J", "5 J"], answer: 0, explanation: "Work = Force × Distance = 10 × 5 = 50 J." },
-    { question: "What is the unit of power?", options: ["Joule", "Watts", "Newton", "Volt"], answer: 1, explanation: "Power is measured in watts (W)." },
-    { question: "Which of the following is an example of projectile motion?", options: ["A thrown ball", "A car moving on a straight road", "A falling leaf", "A satellite orbiting Earth"], answer: 0, explanation: "Projectile motion involves a curved trajectory under gravity." },
-    { question: "What is the energy transformation in a hydroelectric power station?", options: ["Kinetic to electrical", "Electrical to kinetic", "Chemical to electrical", "Heat to mechanical"], answer: 0, explanation: "Water's kinetic energy is converted to electrical energy." },
-    { question: "Which of these is a renewable energy source?", options: ["Coal", "Petroleum", "Solar", "Natural gas"], answer: 2, explanation: "Solar energy is renewable." },
-    { question: "What is the function of a transformer?", options: ["To change voltage", "To store energy", "To generate current", "To measure power"], answer: 0, explanation: "Transformers change AC voltage levels." },
-    { question: "What is the resistance of a wire if voltage is 12 V and current is 3 A?", options: ["0.25 Ω", "36 Ω", "9 Ω", "4 Ω"], answer: 3, explanation: "R = V/I = 12/3 = 4 Ω." },
-    { question: "Which phenomenon explains the bending of light when it passes from air to water?", options: ["Reflection", "Refraction", "Diffraction", "Interference"], answer: 1, explanation: "Refraction is bending of light due to change in speed." },
-    { question: "What is the unit of frequency?", options: ["Newton", "Frequency", "Joule", "Per Seconds"], answer: 1, explanation: "Frequency is measured in hertz (Hz)." },
-    { question: "Which of the following is NOT a fundamental force?", options: ["Gravitational", "Electromagnetic", "Frictional", "Strong nuclear"], answer: 2, explanation: "Frictional force is not fundamental." },
-    { question: "What is the formula for kinetic energy?", options: ["½mv²", "mgh", "F×d", "mv"], answer: 0, explanation: "Kinetic energy = ½ mass × velocity squared." },
-    { question: "What is the unit of pressure?", options: ["Newton per meter square", "Newton", "Joule", "Pascal"], answer: 3, explanation: "Pressure is measured in pascals (Pa)." },
-    { question: "Which instrument is used to measure atmospheric pressure?", options: ["Thermometer", "Barometer", "Hygrometer", "Anemometer"], answer: 1, explanation: "Barometer measures atmospheric pressure." },
-    { question: "What is the speed of sound in air at room temperature?", options: ["1500 m/s", "300 m/s", "340 m/s", "3×10⁸ m/s"], answer: 2, explanation: "Speed of sound in air ≈ 340 m/s." },
-    { question: "What is the main source of energy for the Earth?", options: ["The Sun", "The Moon", "Geothermal", "Nuclear"], answer: 0, explanation: "The Sun is the primary energy source." },
-    { question: "Which property of sound determines its pitch?", options: ["Amplitude", "Frequency", "Speed", "Wavelength"], answer: 1, explanation: "Frequency determines pitch." },
-    { question: "What is the function of a fuse in an electrical circuit?", options: ["To protect against overcurrent", "To increase voltage", "To measure current", "To store charge"], answer: 0, explanation: "Fuses prevent excessive current flow." },
-    { question: "Which of these is a conductor of electricity?", options: ["Plastic", "Glass", "Copper", "Rubber"], answer: 2, explanation: "Copper is a good conductor." },
-    { question: "What happens to the resistance of a conductor as temperature increases?", options: ["decreases", "Increases", "Remains constant", "Becomes zero"], answer: 1, explanation: "Resistance generally increases with temperature." },
-    { question: "Which of the following waves can travel through a vacuum?", options: ["Sound waves", "Light waves", "Water waves", "Seismic waves"], answer: 1, explanation: "Light waves can travel through vacuum." },
-    { question: "What is the unit of electric charge?", options: ["Ohm", "Ampere", "Volt", "Coulomb"], answer: 3, explanation: "Charge is measured in coulombs (C)." },
-    { question: "What is the function of a capacitor?", options: ["Store electric charge", "Resist current", "Generate voltage", "Convert energy"], answer: 0, explanation: "Capacitors store electric charge." },
-    { question: "What is the acceleration of free fall on the Moon compared to Earth?", options: ["Twice", "Same", "1/6th", "Half"], answer: 2, explanation: "Moon's gravity is about 1/6th Earth's." },
-    { question: "Which instrument measures electric potential difference?", options: ["Potentiometer", "Voltmeter", "Ohmmeter", "Galvanometer"], answer: 1, explanation: "Voltmeter measures voltage." },
-    { question: "What is the formula relating speed (v), frequency (f) and wavelength (λ) of a wave?", options: ["v = λ/c", "v = f / λ", "v = f × λ", "v = f + λ"], answer: 2, explanation: "Speed = frequency × wavelength." },
-    { question: "Which of these is a scalar quantity?", options: ["Force", "Displacement", "Speed", "Velocity"], answer: 2, explanation: "Speed has magnitude only." },
-    { question: "What is the function of the filament in a light bulb?", options: ["Conduct electricity", "Emit light when heated", "Store energy", "Reflect light"], answer: 1, explanation: "Filament glows to produce light." }
-  ],
-
-  chemistry: [
-    { question: "Which element has the atomic number 17?", options: ["Nitrogen", "Oxygen", "chlorine", "Fluorine"], answer: 2, explanation: "Chlorine has 17 protons." },
-    { question: "What is the pH of a neutral solution at 25°C?", options: ["1", "0", "14", "7"], answer: 3, explanation: "Neutral solutions have pH 7." },
-    { question: "Which gas is released when an acid reacts with a carbonate?", options: ["Carbon dioxide", "Oxygen", "Hydrogen", "Nitrogen"], answer: 0, explanation: "Carbon dioxide gas is released." },
-    { question: "What is the chemical formula of water?", options: ["CO2", "H2O", "NaCl", "O2"], answer: 1, explanation: "Water is H2O." },
-    { question: "Which of these is a noble gas?", options: ["Nitrogen", "Oxygen", "Helium", "Hydrogen"], answer: 2, explanation: "Helium is a noble gas." },
-    { question: "What is the valency of oxygen?", options: ["5", "1", "3", "2"], answer: 3, explanation: "Oxygen has valency 2." },
-    { question: "Which acid is found in vinegar?", options: ["Acetic acid", "Sulfuric acid", "Hydrochloric acid", "Nitric acid"], answer: 0, explanation: "Vinegar contains acetic acid." },
-    { question: "What is the main gas in the Earth's atmosphere?", options: ["Nitrogen", "Oxygen", "Carbon dioxide", "Argon"], answer: 0, explanation: "Nitrogen makes up ~78% of air." },
-    { question: "Which of these is an alkali metal?", options: ["Sodium", "Calcium", "Magnesium", "Aluminium"], answer: 0, explanation: "Sodium is an alkali metal." },
-    { question: "What is the chemical symbol for potassium?", options: ["K", "P", "Po", "Pt"], answer: 0, explanation: "Potassium's symbol is K." },
-    { question: "What is the process of a solid changing directly to gas called?", options: ["Condensation", "Evaporation", "Sublimation", "Melting"], answer: 2, explanation: "Sublimation is solid to gas." },
-    { question: "Which of these is a compound?", options: ["Oxygen", "Water", "Nitrogen", "Iron"], answer: 1, explanation: "Water (H2O) is a compound." },
-    { question: "What is the formula for methane?", options: ["O2", "C2H6", "CO2", "CH4"], answer: 3, explanation: "Methane is CH4." },
-    { question: "Which metal is liquid at room temperature?", options: ["Mercury", "Iron", "Copper", "Aluminium"], answer: 0, explanation: "Mercury is liquid at room temp." },
-    { question: "What is the product of neutralization of acid and base?", options: ["Salt and water", "Water and gas", "Salt and gas", "Acid and base"], answer: 0, explanation: "Neutralization produces salt and water." },
-    { question: "Which element is most abundant in the Earth's crust?", options: ["Oxygen", "Silicon", "Aluminium", "Iron"], answer: 0, explanation: "Oxygen is most abundant by weight." },
-    { question: "What is the molar mass of water (H2O)?", options: ["19.5 g/mol", "15 g/mol", "17 g/mol", "18 g/mol"], answer: 3, explanation: "H=1, O=16, total=18 g/mol." },
-    { question: "Which of these is an example of a physical change?", options: ["Burning Wood", "Melting ice", "Rusting iron", "Cooking food"], answer: 1, explanation: "Melting ice is physical change." },
-    { question: "What is the oxidation state of carbon in CO2?", options: ["+4", "-3", "4", "+4"], answer: 3, explanation: "Carbon is +4 in CO2." },
-    { question: "Which of these is an acid?", options: ["CaCO3", "NaOH", "HCl", "KOH"], answer: 2, explanation: "Hydrochloric acid is HCl." },
-    { question: "What is the chemical formula of baking soda?", options: ["CaCO3", "NaCl", "KOH", "NaHCO3"], answer: 3, explanation: "Baking soda is sodium bicarbonate." },
-    { question: "Which element is used in making fertilizers?", options: ["Oxygen", "Nitrogen", "Helium", "Argon"], answer: 1, explanation: "Nitrogen is essential for fertilizers." },
-    { question: "What is the main component of natural gas?", options: ["Butane", "Ethane", "Methane", "Butane"], answer: 2, explanation: "Methane is the main component." },
-    { question: "Which of these is a halogen?", options: ["Chlorine", "Oxygen", "Fluorine", "Hydrogen"], answer: 2, explanation: "Chlorine is a halogen but Fluorine is more electronegative." },
-    { question: "What is the charge on an electron?", options: ["-1", "+1", "0", "+2"], answer: 0, explanation: "Electron charge is negative." },
-    { question: "Which gas causes acid rain?", options: ["Sulfuric acid", "Nitrogen", "Sulfur dioxide", "Carbon monoxide"], answer: 2, explanation: "SO2 reacts to form acid rain." },
-    { question: "What is the boiling point of water at standard pressure?", options: ["100°C", "0°C", "50°C", "212°C"], answer: 0, explanation: "Water boils at 100°C at 1 atm." },
-    { question: "Which of these is a base?", options: ["HCl", "NaOH", "CO2", "CH4"], answer: 1, explanation: "Sodium hydroxide is a base." },
-    { question: "What is the chemical formula of table salt?", options: ["NaCl", "KCl", "CaCl2", "MgCl2"], answer: 0, explanation: "Table salt is sodium chloride." },
-    { question: "Which element is a liquid metal?", options: ["Lithuim", "Lead", "Mercury", "Copper"], answer: 2, explanation: "Mercury is liquid at room temp." },
-    { question: "What is the process of converting a gas to a liquid called?", options: ["Melting", "Evaporation", "Sublimation", "Condensation"], answer: 3, explanation: "Condensation is gas to liquid." },
-    { question: "Which of these is an isotope of hydrogen?", options: ["Deuterium", "Oxygen", "Carbon", "Nitrogen"], answer: 0, explanation: "Deuterium is hydrogen isotope." },
-    { question: "What is the chemical symbol for iron?", options: ["Fe2+", "Fe", "Ag", "I"], answer: 1, explanation: "Iron's symbol is Fe." },
-    { question: "Which of these is a saturated hydrocarbon?", options: ["Butane", "Ethene", "Methane", "Benzene"], answer: 2, explanation: "Methane is saturated (alkane)."},
-    { question: "Which gas is responsible for photosynthesis?", options: ["Carbon dioxide", "Oxygen", "Nitrogen", "Hydrogen"], answer: 0, explanation: "Plants use CO2 for photosynthesis." },
-    { question: "What is the main constituent of air after nitrogen?", options: ["CarbonIVoxide", "Argon", "Oxygen", "Hydrogen"], answer: 2, explanation: "Oxygen is about 21% of air." }
-  ],
-
-  biology: [
-    { question: "Which process occurs in mitochondria?", options: ["Photosynthesis", "Protein synthesis", "Aerobic respiration", "Osmoregulation"], answer: 2, explanation: "Mitochondria are sites of respiration." },
-    { question: "What is the function of red blood cells?", options: ["Fight infection", "Transport oxygen", "Blood clotting", "Produce hormones"], answer: 1, explanation: "RBCs carry oxygen via hemoglobin." },
-    { question: "Which organ produces insulin?", options: ["Liver", "Pancreas", "Kidney", "Spleen"], answer: 1, explanation: "Pancreas produces insulin." },
-    { question: "What is the basic unit of life?", options: ["Tissue", "Atom", "Molecule", "Cell"], answer: 3, explanation: "Cell is the basic unit of life." },
-    { question: "Which blood group is the universal donor?", options: ["AO", "A", "0", "AB"], answer: 2, explanation: "Group O can donate to all." },
-    { question: "What is the function of the large intestine?", options: ["Absorb nutrients", "Absorb water", "Produce enzymes", "Store bile"], answer: 1, explanation: "Large intestine absorbs water." },
-    { question: "Which part of the brain controls balance?", options: ["Cerebrum", "Cerebellum", "Medulla", "Hypothalamus"], answer: 1, explanation: "Cerebellum controls balance." },
-    { question: "What is the main site of photosynthesis?", options: ["Roots", "Stem", "Leaves", "Flowers"], answer: 2, explanation: "Chloroplasts in leaves do photosynthesis." },
-    { question: "Which hormone regulates blood sugar?", options: ["Adrenaline", "Insulin", "Thyroxine", "Estrogen"], answer: 1, explanation: "Insulin lowers blood sugar." },
-    { question: "What is the function of the alveoli?", options: ["Gas exchange", "Digest food", "Filter blood", "Produce hormones"], answer: 0, explanation: "Alveoli exchange oxygen and CO2." },
-    { question: "Which vitamin is produced by skin exposure to sunlight?", options: ["Vitamin A", "Vitamin C", "Vitamin D", "Vitamin K"], answer: 2, explanation: "Vitamin D is synthesized in skin." },
-    { question: "What is the genetic material in most organisms?", options: ["RNA", "DNA", "Protein", "Lipid"], answer: 1, explanation: "DNA carries genetic info." },
-    { question: "Which process produces gametes?", options: ["Mitosis", "Conjugation", "Fertilization", "Meiosis"], answer: 3, explanation: "Meiosis produces sex cells." },
-    { question: "What is the function of enzymes?", options: ["Alter the rate", "Speed up reactions", "Provide structure", "Transport oxygen"], answer: 1, explanation: "Enzymes catalyze reactions." },
-    { question: "Which blood vessels carry blood away from the heart?", options: ["Veins", "Arteries", "Capillaries", "Venules"], answer: 1, explanation: "Arteries carry blood away." },
-    { question: "What is the role of white blood cells?", options: ["Carry oxygen", "Fight infection", "Clot blood", "Produce hormones"], answer: 1, explanation: "WBCs defend against pathogens." },
-    { question: "Which organ filters blood to produce urine?", options: ["Liver", "Lung", "Kidney", "Loop of herles"], answer: 2, explanation: "Kidneys filter blood." },
-    { question: "What is the function of chlorophyll?", options: ["Protection", "Store food", "Transport water", "Absorb light energy"], answer: 3, explanation: "Chlorophyll absorbs light for photosynthesis." },
-    { question: "Which part of the cell controls activities?", options: ["Cellulose cell wall", "Cytoplasm", "Cell membrane", "Mitochondria" , "Nucleus"], answer: 4, explanation: "Nucleus contains DNA." },
-    { question: "What is the main function of the respiratory system?", options: ["Digest food", "Exchange gases", "Pump blood", "Remove waste"], answer: 1, explanation: "Respiratory system exchanges gases." },
-    { question: "Which of these is a parasite?", options: ["Tapeworm", "Earthworm", "Grasshopper", "Frog"], answer: 0, explanation: "Tapeworm lives at host's expense." },
-    { question: "What is the female reproductive organ in plants?", options: ["Stamen", "Sepal", "Petal", "Carpel"], answer: 3, explanation: "Carpel contains ovary." },
-    { question: "Which process involves pollen transfer?", options: ["Fertilization", "Germination", "Pollination", "Photosynthesis"], answer: 2, explanation: "Pollination transfers pollen." },
-    { question: "What is the function of ribosomes?", options: ["Protein synthesis", "Energy production", "Transport", "Storage"], answer: 0, explanation: "Ribosomes make proteins." },
-    { question: "Which blood component helps in clotting?", options: ["White blood cells", "Red blood cells", "Platelets", "Plasma"], answer: 2, explanation: "Platelets clot blood." },
-    { question: "What is the term for organisms that make their own food?", options: ["phototrophs", "Heterotrophs", "Parasites", "Autotrophs"], answer: 3, explanation: "Autotrophs produce food via photosynthesis." },
-    { question: "Which vitamin is essential for blood clotting?", options: ["Vitamin B", "Vitamin k", "Vitamin A", "Vitamin D"], answer: 1, explanation: "Vitamin K is needed for clotting." },
-    { question: "What is the main function of the liver?", options: ["Blood production", "Digestion", "Detoxification", "Excretion"], answer: 2, explanation: "Liver detoxifies substances." },
-    { question: "Which part of the eye controls the amount of light entering?", options: ["Lens", "Iris", "Retina", "Cornea"], answer: 1, explanation: "Iris adjusts pupil size." },
-    { question: "What is the function of the cell membrane?", options: ["Control entry and exit", "Provide support", "Store food", "Make proteins"], answer: 0, explanation: "Cell membrane controls movement." },
-    { question: "Which process converts glucose to energy?", options: ["Photosynthesis", "Respiration", "Fermentation", "Transpiration"], answer: 1, explanation: "Respiration releases energy." },
-    { question: "Which organ produces bile?", options: ["Liver", "Pancreas", "Kidney", "Stomach"], answer: 0, explanation: "Liver produces bile." },
-    { question: "What is the function of stomata in leaves?", options: ["Gas exchange", "Water absorption", "Food storage", "Protection"], answer: 0, explanation: "Stomata allow gas exchange." },
-    { question: "Which blood vessel has valves?", options: ["Artery", "Veins", "Capillaries", "Venules"], answer: 1, explanation: "Valves prevent backflow in veins." },
-    { question: "Which hormone controls metabolism?", options: ["Ostrogen", "Insulin", "Adrenaline", "Thyroxine"], answer: 3, explanation: "Thyroxine regulates metabolism." },
-    { question: "What is the female gamete called?", options: ["Sperm", "Egg", "Pollen", "Zygote"], answer: 1, explanation: "Egg is female gamete." },
-    { question: "Which part of the brain controls heartbeat?", options: ["Medulla", "Cerebrum", "Cerebellum", "Hypothalamus"], answer: 0, explanation: "Medulla controls vital functions." }
-  ],
-
-  mathematics: [
-    { question: "Simplify 2³ × 2⁴", options: ["4⁷", "2¹²", "2⁷", "8³"], answer: 2, explanation: "aᵐ × aⁿ = aᵐ⁺ⁿ" },
-    { question: "What is the value of π/2 radians in degrees?", options: ["120°", "90°", "60°", "45°"], answer: 1, explanation: "π radians = 180°, so π/2 = 90°" },
-    { question: "Solve for x: 3x + 5 = 20", options: ["10", "5", "25", "10"], answer: 1, explanation: "3x = 15 ⇒ x = 5" },
-    { question: "What is the next number in the sequence: 2, 4, 8, 16, ...?", options: ["32", "24", "20", "18"], answer: 0, explanation: "Sequence doubles each time." },
-    { question: "What is the area of a circle with radius 7cm?", options: ["22 cm²", "44 cm²", "49 cm²", "154 cm²"], answer: 3, explanation: "Area = πr² = 3.14 × 49 = 154 cm²" },
-    { question: "What is the square root of 144?", options: ["10", "14", "12", "24"], answer: 2, explanation: "12 × 12 = 144" },
-    { question: "If 5x = 20, what is the value of x?", options: ["4", "5", "15", "25"], answer: 0, explanation: "x = 20/5 = 4" },
-    { question: "What is the value of 7! (7 factorial)?", options: ["720", "5040", "120", "40320"], answer: 1, explanation: "7! = 7×6×5×4×3×2×1 = 5040" },
-    { question: "What is the sum of interior angles of a triangle?", options: ["120°", "360°", "180°", "90°"], answer: 2, explanation: "Sum of triangle angles = 180°" },
-    { question: "What is the median of the set: 3, 7, 9, 12, 15?", options: ["9", "7", "12", "10"], answer: 0, explanation: "Median is middle value when ordered." },
-    { question: "What is the gradient of the line passing through (2,3) and (4,7)?", options: ["4", "1", "3", "2"], answer: 3, explanation: "Gradient = (7-3)/(4-2) = 4/2 = 2" },
-    { question: "What is the value of log₁₀ 1000?", options: ["4", "3", "10", "1"], answer: 1, explanation: "log₁₀ 1000 = 3" },
-    { question: "What is the perimeter of a rectangle with length 8cm and width 5cm?", options: ["26 cm", "40 cm", "13 cm", "20 cm"], answer: 0, explanation: "Perimeter = 2(l + w) = 2(8+5)=26 cm" },
-    { question: "What is the solution to the inequality 2x - 3 > 7?", options: ["x > 2", "x < 4", "x > 5", "x < 2"], answer: 2, explanation: "2x > 10 ⇒ x > 5" },
-    { question: "What is the value of sin 30°?", options: ["0.886", "0.5", "1", "0"], answer: 1, explanation: "sin 30° = 0.5" },
-    { question: "What is the volume of a cube with side length 4cm?", options: ["61 cm³", "63 cm³", "64 cm³", "46 cm³"], answer: 2, explanation: "Volume = side³ = 4³ = 64 cm³" },
-    { question: "What is the probability of getting heads when a coin is tossed?", options: ["0.3", "0.5", "1", "0"], answer: 1, explanation: "Two outcomes, so probability = 1/2 = 0.5" },
-    { question: "What is the value of 5² + 12²?", options: ["164", "144", "165", "169"], answer: 3, explanation: "5²+12²=25+144=169" },
-    { question: "What is the next prime number after 7?", options: ["11", "9", "13", "15"], answer: 0, explanation: "Next prime after 7 is 11" },
-    { question: "What is the sum of the first 10 natural numbers?", options: ["50", "45", "55", "60"], answer: 2, explanation: "Sum = n(n+1)/2 = 10×11/2=55" },
-    { question: "If y = 3x + 2, what is y when x = 4?", options: ["10", "12", "14", "16"], answer: 2, explanation: "y = 3×4 + 2 = 14" },
-    { question: "What is the length of the hypotenuse of a right triangle with sides 6cm and 8cm?", options: ["10 cm", "12 cm", "14 cm", "9 cm"], answer: 0, explanation: "Hypotenuse = √(6²+8²) = 10 cm" },
-    { question: "What is the value of cos 60°?", options: ["0.5", "0.866", "1", "0"], answer: 0, explanation: "cos 60° = 0.5" },
-    { question: "What is the mode of the set: 2, 4, 4, 6, 8?", options: ["5", "2", "4", "2"], answer: 2, explanation: "Mode is the most frequent value." },
-    { question: "What is the value of 0 factorial (0!)?", options: ["-1", "0", "1", "Undefined"], answer: 3, explanation: "0! is defined as 1." },
-    { question: "What is the equation of a line parallel to y = 2x + 3?", options: ["y = 2x - 5", "y = -2x + 3", "y = x + 2", "y = -x + 3"], answer: 0, explanation: "Parallel lines have same slope." },
-    { question: "What is the surface area of a sphere with radius 7cm?", options: ["514 cm²", "616 cm²", "308 cm²", "77 cm²"], answer: 1, explanation: "Surface area = 4πr² = 4×3.14×49=616 cm²" },
-    { question: "What is the value of tan 45°?", options: ["1", "0", "√3", "0.5"], answer: 0, explanation: "tan 45° = 1" },
-    { question: "What is the next term in the arithmetic sequence 3, 7, 11, 15, ...?", options: ["25", "20", "18", "19"], answer: 3, explanation: "Common difference is 4." },
-    { question: "What is the circumference of a circle with diameter 10cm?", options: ["31.4 cm", "15.7 cm", "62.8 cm", "10 cm"], answer: 0, explanation: "Circumference = πd = 3.14×10=31.4 cm" },
-    { question: "What is the solution to the equation x² = 49?", options: ["7", "±7", "-7", "0"], answer: 1, explanation: "x = ±7" },
-    { question: "What is the value of 3 × 4 + 2?", options: ["14", "20", "18", "12"], answer: 0, explanation: "3×4=12 +2=14" },
-    { question: "What is the probability of drawing an ace from a standard deck of cards?", options: ["1/14", "1/13", "1/4", "1/26"], answer: 1, explanation: "There are 4 aces in 52 cards." },
-    { question: "What is the decimal equivalent of 3/4?", options: ["0.57", "0.77", "0.25", "0.75"], answer: 3, explanation: "3 divided by 4 is 0.75" },
-    { question: "What is the value of 10² - 8²?", options: ["36", "18", "64", "100"], answer: 0, explanation: "100 - 64 = 36" },
-    { question: "What is the sum of angles in a octagon?", options: ["360°", "1080°", "90°", "270°"], answer: 1, explanation: "Sum of quadrilateral angles = 360°" },
-    { question: "What is the solution to 5x - 10 = 0?", options: ["-2", "0", "2", "10"], answer: 2, explanation: "5x=10 ⇒ x=2" }
-  ],
-
-  english: [
-    { question: "Choose the correct stress pattern: 'EDUCATION'", options: ["ED-u-ca-tion", "e-DU-ca-tion", "e-du-CA-tion", "e-du-ca-TION"], answer: 2, explanation: "Primary stress falls on third syllable: e-du-CA-tion" },
-    { question: "Which is a synonym for 'BENEVOLENT'?", options: ["Cruel", "Kind", "Selfish", "Stingy"], answer: 1, explanation: "Benevolent means well-meaning and kindly." },
-    { question: "Identify the adjective in the sentence: 'The quick brown fox jumps over the lazy dog.'", options: ["quick", "fox", "jumps", "dog"], answer: 0, explanation: "'quick' describes the fox." },
-    { question: "Choose the correct plural form of 'child'.", options: ["Childs", "Children", "Childes", "Child's"], answer: 1, explanation: "Plural of child is 'children'." },
-    { question: "Which sentence is grammatically correct?", options: ["She don't like apples.", "She doesn't like apples.", "She not like apples.", "She isn't likes apples."], answer: 1, explanation: "Correct is 'She doesn't like apples.'" },
-    { question: "Choose the correct antonym of 'generous'.", options: ["Greedy", "Kind", "Helpful", "Friendly"], answer: 0, explanation: "Greedy is opposite of generous." },
-    { question: "What is the meaning of the idiom 'Break the ice'?", options: ["Start a conversation", "Break something", "Stop working", "Make a mistake"], answer: 0, explanation: "Means to initiate social interaction." },
-    { question: "Which word is a noun?", options: ["Run", "Beautiful", "Happiness", "Quickly"], answer: 2, explanation: "'Happiness' is a noun." },
-    { question: "Choose the correct verb form: 'She ___ to school every day.'", options: ["go", "goes", "going", "gone"], answer: 1, explanation: "Third person singular requires 'goes'." },
-    { question: "What is the past tense of 'teach'?", options: ["Teached", "Taught", "Teaching", "Teach"], answer: 1, explanation: "Past tense is 'taught'." },
-    { question: "Which sentence is in passive voice?", options: ["The dog chased the cat.", "The cat was chased by the dog.", "The dog is chasing the cat.", "The cat chases the dog."], answer: 1, explanation: "Passive voice: subject receives action." },
-    { question: "Identify the preposition: 'The book is on the table.'", options: ["book", "on", "table", "is"], answer: 1, explanation: "'on' shows position." },
-    { question: "Choose the correct conjunction: 'I like tea ___ coffee.'", options: ["and", "but", "or", "so"], answer: 2, explanation: "'or' connects alternatives." },
-    { question: "What is the plural of 'mouse'?", options: ["Mouses", "Mice", "Mouse", "Mices"], answer: 1, explanation: "Plural is 'mice'." },
-    { question: "Which word is an adverb?", options: ["Quick", "Quickly", "Quickness", "Quicker"], answer: 1, explanation: "'Quickly' modifies verbs." },
-    { question: "Choose the correct sentence:", options: ["He can sings well.", "He can sing well.", "He can singing well.", "He can sang well."], answer: 1, explanation: "'Can' is followed by base verb." },
-    { question: "What is the synonym of 'happy'?", options: ["Sad", "Joyful", "Angry", "Tired"], answer: 1, explanation: "'Joyful' means happy." },
-    { question: "Identify the subject in: 'The children are playing outside.'", options: ["children", "playing", "outside", "are"], answer: 0, explanation: "'children' is subject." },
-    { question: "Choose the correct possessive pronoun:", options: ["Hers", "Her", "She", "Him"], answer: 0, explanation: "'Hers' shows possession." },
-    { question: "What is the correct comparative form of 'good'?", options: ["Gooder", "Better", "More good", "Best"], answer: 1, explanation: "'Better' is comparative of good." },
-    { question: "Choose the correct article: '___ apple a day keeps the doctor away.'", options: ["A", "An", "The", "No article"], answer: 1, explanation: "'An' before vowel sound." },
-    { question: "What is the past participle of 'go'?", options: ["Went", "Gone", "Going", "Go"], answer: 1, explanation: "'Gone' is past participle." },
-    { question: "Which sentence is a question?", options: ["She is happy.", "Is she happy?", "She happy is.", "Happy she is."], answer: 1, explanation: "Questions invert subject and verb." },
-    { question: "Choose the correct form: 'They ___ playing football now.'", options: ["is", "are", "am", "be"], answer: 1, explanation: "'They' takes 'are'." },
-    { question: "What is the meaning of 'to procrastinate'?", options: ["Delay", "Hurry", "Complete", "Forget"], answer: 0, explanation: "Procrastinate means to delay." },
-    { question: "Identify the tense: 'She has finished her homework.'", options: ["Present perfect", "Past simple", "Future", "Present continuous"], answer: 0, explanation: "Present perfect uses 'has/have' + past participle." },
-    { question: "Choose the correct plural form: 'knife'", options: ["knifes", "knives", "knifes'", "knif"], answer: 1, explanation: "Plural of knife is knives." },
-    { question: "What is the antonym of 'difficult'?", options: ["Easy", "Hard", "Tough", "Complex"], answer: 0, explanation: "Easy is opposite of difficult." },
-    { question: "Which sentence uses a simile?", options: ["He is as brave as a lion.", "He runs fast.", "He is brave.", "He is a lion."], answer: 0, explanation: "Simile uses 'as' or 'like'." },
-    { question: "Choose the correct homophone: 'Their/There/They're going to the market.'", options: ["Their", "There", "They're", "Theirs"], answer: 2, explanation: "'They're' is contraction of 'they are'." },
-    { question: "What is the plural of 'child'?", options: ["Childs", "Children", "Childes", "Child's"], answer: 1, explanation: "Plural is 'children'." },
-    { question: "Identify the verb in: 'She quickly ran to the store.'", options: ["quickly", "ran", "store", "she"], answer: 1, explanation: "'ran' is the verb." },
-    { question: "Choose the correct sentence:", options: ["I have went home.", "I have gone home.", "I has gone home.", "I has went home."], answer: 1, explanation: "'Have gone' is correct." },
-    { question: "What is the meaning of 'ambiguous'?", options: ["Unclear", "Clear", "Simple", "Obvious"], answer: 0, explanation: "Ambiguous means unclear." },
-    { question: "Which is a compound sentence?", options: ["I went home, and I cooked dinner.", "I went home.", "Cooking dinner.", "Went home and cooked."], answer: 0, explanation: "Compound sentence has two independent clauses." },
-    { question: "Choose the correct preposition: 'She is good ___ math.'", options: ["at", "in", "on", "with"], answer: 0, explanation: "'Good at' is correct." }
-  ],
-  currentaffairs :[
-  {
-    question: "Who is the current President of Nigeria as of 2025?",
-    options: ["Goodluck Jonathan", "Bola Tinubu", "Olusegun Obasanjo", "Muhammadu Buhari"],
-    answer: 1,
-    explanation: "Bola Tinubu is the President of Nigeria as of 2025."
-  },
-  {
-    question: "What is the capital city of Nigeria?",
-    options: ["Kano", "Port Harcourt", "Abuja", "Lagos"],
-    answer: 2,
-    explanation: "Abuja is the capital city of Nigeria."
-  },
-  {
-    question: "Which Nigerian state is known as the 'Centre of Excellence'?",
-    options: ["Anambra", "Enugu", "Lagos", "Rivers"],
-    answer: 2,
-    explanation: "Lagos State is known as the 'Centre of Excellence'."
-  },
-  {
-    question: "When did Nigeria gain independence from Britain?",
-    options: ["1963", "1960", "1957", "1970"],
-    answer: 1,
-    explanation: "Nigeria gained independence on October 1, 1960."
-  },
-  {
-    question: "Who is the current Governor of Lagos State in 2025?",
-    options: ["Babatunde Fashola", "Babajide Sanwo-Olu", "Akinwunmi Ambode", "Jide Sanwo-Olu"],
-    answer: 1,
-    explanation: "Babajide Sanwo-Olu is the current Governor of Lagos State."
-  },
-  {
-    question: "What is the currency of Nigeria?",
-    options: ["Naira", "Dollar", "Cedi", "Pound"],
-    answer: 0,
-    explanation: "The Nigerian currency is the Naira."
-  },
-  {
-    question: "Which Nigerian city is the oil hub of the country?",
-    options: ["Lagos", "Abuja", "Port Harcourt", "Kano"],
-    answer: 2,
-    explanation: "Port Harcourt is the oil hub of Nigeria."
-  },
-  {
-    question: "What is the name of Nigeria's national football team?",
-    options: ["Black Stars", "Super Eagles", "Green Falcons", "Indomitable Lions"],
-    answer: 1,
-    explanation: "Nigeria's national football team is called the Super Eagles."
-  },
-  {
-    question: "Which Nigerian university is the oldest?",
-    options: ["University of Lagos", "Obafemi Awolowo University", "Ahmadu Bello University", "University of Ibadan"],
-    answer: 3,
-    explanation: "University of Ibadan is the oldest university in Nigeria."
-  },
-  {
-    question: "Who is the current Chief Justice of Nigeria as of 2025?",
-    options: ["Walter Onnoghen", "Olukayode Ariwoola", "Ibrahim Tanko Muhammad", "Mahmud Mohammed"],
-    answer: 1,
-    explanation: "Olukayode Ariwoola is the Chief Justice of Nigeria in 2025."
-  },
-  {
-    question: "What is Nigeria's largest ethnic group?",
-    options: ["Yoruba", "Hausa-Fulani", "Igbo", "Ijaw"],
-    answer: 1,
-    explanation: "The Hausa-Fulani is the largest ethnic group in Nigeria."
-  },
-  {
-    question: "Which Nigerian city is known as the 'Centre of Learning'?",
-    options: ["Ibadan", "Lagos", "Enugu", "Jos"],
-    answer: 0,
-    explanation: "Ibadan is often called the 'Centre of Learning' in Nigeria."
-  },
-  {
-    question: "What is the main language spoken in Lagos State?",
-    options: ["Igbo", "Yoruba", "Hausa", "Efik"],
-    answer: 1,
-    explanation: "Yoruba is the main language spoken in Lagos State."
-  },
-  {
-    question: "Which Nigerian state is famous for the Argungu Fishing Festival?",
-    options: ["Kebbi", "Sokoto", "Borno", "Kaduna"],
-    answer: 0,
-    explanation: "The Argungu Fishing Festival is held in Kebbi State."
-  },
-  {
-    question: "Who is the Nigerian Nobel Laureate in Literature?",
-    options: ["Wole Soyinka", "Chinua Achebe", "Chimamanda Ngozi Adichie", "Ben Okri"],
-    answer: 0,
-    explanation: "Wole Soyinka won the Nobel Prize in Literature."
-  },
-  {
-    question: "What is the Nigerian national motto?",
-    options: ["Unity and Faith, Peace and Progress", "Peace and Unity", "Strength in Diversity", "One Nigeria"],
-    answer: 0,
-    explanation: "Nigeria's national motto is 'Unity and Faith, Peace and Progress'."
-  },
-  {
-    question: "Which Nigerian city hosts the headquarters of the African Union?",
-    options: ["Addis Ababa", "Lagos", "Abuja", "Cairo"],
-    answer: 0,
-    explanation: "The African Union headquarters is in Addis Ababa, Ethiopia."
-  },
-  {
-    question: "What is the name of Nigeria's national airline?",
-    options: ["Arik Air", "Air Peace", "Dana Air", "Nigerian Airways"],
-    answer: 1,
-    explanation: "Air Peace is currently the largest Nigerian airline."
-  },
-  {
-    question: "Which Nigerian state is the home of the Nok culture?",
-    options: ["Plateau", "Kaduna", "Niger", "Kano"],
-    answer: 1,
-    explanation: "The Nok culture originated in Kaduna State."
-  },
-  {
-    question: "What is the main religion in Northern Nigeria?",
-    options: ["Christianity", "Islam", "Traditional African Religion", "Hinduism"],
-    answer: 1,
-    explanation: "Islam is the main religion in Northern Nigeria."
-  },
-  {
-    question: "Which Nigerian city is known as the 'Coal City'?",
-    options: ["Enugu", "Jos", "Calabar", "Benin City"],
-    answer: 0,
-    explanation: "Enugu is known as the 'Coal City' due to its coal mining history."
-  },
-  {
-    question: "Who was the first President of Nigeria?",
-    options: ["Nnamdi Azikiwe", "Olusegun Obasanjo", "Abubakar Tafawa Balewa", "Goodluck Jonathan"],
-    answer: 0,
-    explanation: "Nnamdi Azikiwe was Nigeria's first President."
-  },
-  {
-    question: "Which Nigerian city is the commercial capital?",
-    options: ["Abuja", "Lagos", "Port Harcourt", "Kano"],
-    answer: 1,
-    explanation: "Lagos is Nigeria's commercial capital."
-  },
-  {
-    question: "What is the official language of Nigeria?",
-    options: ["Hausa", "English", "Yoruba", "Igbo"],
-    answer: 1,
-    explanation: "English is the official language of Nigeria."
-  },
-  {
-    question: "Which Nigerian festival celebrates the New Yam?",
-    options: ["Eyo Festival", "Osun-Osogbo Festival", "Iri Ji Festival", "Argungu Festival"],
-    answer: 2,
-    explanation: "The Iri Ji Festival celebrates the New Yam."
-  },
-  {
-    question: "Which Nigerian state is famous for the Aso Rock?",
-    options: ["Abuja", "Kaduna", "Lagos", "Rivers"],
-    answer: 0,
-    explanation: "Aso Rock is a large rock formation in Abuja."
-  },
-  {
-    question: "Who is the founder of the African Continental Free Trade Area (AfCFTA)?",
-    options: ["Muhammadu Buhari", "Paul Kagame", "Nana Akufo-Addo", "Cyril Ramaphosa"],
-    answer: 2,
-    explanation: "Nana Akufo-Addo was instrumental in founding AfCFTA."
-  },
-  {
-    question: "What is the main export product of Nigeria?",
-    options: ["Crude oil", "Cocoa", "Rubber", "Cotton"],
-    answer: 0,
-    explanation: "Crude oil is Nigeria's main export product."
-  },
-  {
-    question: "Which Nigerian city is known for the Tinapa Business Resort?",
-    options: ["Calabar", "Lagos", "Abuja", "Port Harcourt"],
-    answer: 0,
-    explanation: "Tinapa Business Resort is located in Calabar."
-  },
-  {
-    question: "What is the name of Nigeria's legislative house?",
-    options: ["National Assembly", "House of Representatives", "Senate", "Parliament"],
-    answer: 0,
-    explanation: "The National Assembly is Nigeria's legislative body."
-  },
-  {
-    question: "Which Nigerian state is the home of the Olumo Rock?",
-    options: ["Ogun", "Ondo", "Lagos", "Ekiti"],
-    answer: 0,
-    explanation: "Olumo Rock is located in Ogun State."
-  },
-
-  {
-    question: "Who won the 2025 FIFA Women's World Cup?",
-    options: ["Germany", "USA", "Netherlands", "Japan"],
-    answer: 1,
-    explanation: "The USA won the 2025 FIFA Women's World Cup."
-  },
-  {
-    question: "Which country launched the Artemis III mission to the Moon in 2025?",
-    options: ["India", "Russia", "USA", "China"],
-    answer: 2,
-    explanation: "The USA launched Artemis III mission aiming to land astronauts on the Moon."
-  },
-  {
-    question: "What major climate agreement was signed in 2025 to reduce global carbon emissions?",
-    options: ["Earth Summit Accord", "Paris Agreement 2.0", "Kyoto Protocol Renewal", "Global Green Pact"],
-    answer: 1,
-    explanation: "The Paris Agreement 2.0 was signed in 2025 to strengthen commitments on carbon reduction."
-  },
-  {
-    question: "Which technology company unveiled a breakthrough in quantum computing in 2025?",
-    options: ["Intel", "Google", "Microsoft", "IBM"],
-    answer: 1,
-    explanation: "Google announced a major breakthrough in quantum computing in 2025."
-  },
-  {
-    question: "What was the theme of the 2025 World Economic Forum held in Davos?",
-    options: ["Inclusive Growth", "Post-Pandemic Recovery", "Global Digital Economy", "Sustainable Development"],
-    answer: 1,
-    explanation: "The 2025 WEF focused on Post-Pandemic Recovery strategies worldwide."
-  },
-
-  {
-    question: "Which Nigerian state is known for the Durbar Festival?",
-    options: ["Kano", "Lagos", "Kaduna", "Borno"],
-    answer: 0,
-    explanation: "The Durbar Festival is celebrated prominently in Kano State."
-  },
-  {
-    question: "Who is the current Vice President of Nigeria as of 2025?",
-    options: ["Yemi Osinbajo", "Namadi Sambo", "Goodluck Jonathan", "Atiku Abubakar"],
-    answer: 0,
-    explanation: "Yemi Osinbajo is the Vice President of Nigeria as of 2025."
-  },
-  {
-    question: "Which Nigerian city is the headquarters of the Economic Community of West African States (ECOWAS)?",
-    options: ["Abuja", "Lagos", "Accra", "Dakar"],
-    answer: 0,
-    explanation: "ECOWAS headquarters is located in Abuja, Nigeria."
-  },
-  {
-    question: "What is the name of Nigeria’s national airline that resumed operations in 2021?",
-    options: ["Arik Air", "Air Peace", "Nigerian Airways", "Dana Air"],
-    answer: 2,
-    explanation: "Nigerian Airways resumed operations in 2021."
-  },
-  {
-    question: "Which Nigerian state is famous for the Ogbunike Caves?",
-    options: ["Anambra", "Enugu", "Ebonyi", "Imo"],
-    answer: 2,
-    explanation: "Ogbunike Caves are located in Anambra State."
-  },
-  {
-    question: "What year was the Nigerian Stock Exchange established?",
-    options: ["1960", "1977", "1961", "1980"],
-    answer: 2,
-    explanation: "The Nigerian Stock Exchange was established in 1961."
-  },
-  {
-    question: "Which Nigerian city is known as the 'Garden City'?",
-    options: ["Port Harcourt", "Ibadan", "Benin City", "Enugu"],
-    answer: 0,
-    explanation: "Port Harcourt is nicknamed the 'Garden City'."
-  },
-  {
-    question: "Who is the founder of the Nigerian music genre Afrobeat?",
-    options: ["Fela Kuti", "Wizkid", "Davido", "Burnaboy"],
-    answer: 0,
-    explanation: "Fela Kuti is the founder of Afrobeat."
-  },
-  {
-    question: "Which Nigerian state is the largest by land area?",
-    options: ["Niger", "Borno", "Kano", "Kaduna"],
-    answer: 1,
-    explanation: "Borno State is the largest by land area."
-  },
-  {
-    question: "What is the name of Nigeria’s national petroleum company?",
-    options: ["NNPC", "Shell Nigeria", "Total Nigeria", "Chevron Nigeria"],
-    answer: 0,
-    explanation: "NNPC stands for Nigerian National Petroleum Corporation."
-  },
-  {
-    question: "Which Nigerian city hosts the annual Calabar Carnival?",
-    options: ["Calabar", "Lagos", "Abuja", "Port Harcourt"],
-    answer: 0,
-    explanation: "The Calabar Carnival is held in Calabar."
-  },
-  {
-    question: "What is the official motto of the Nigerian Police Force?",
-    options: ["Service and Protection", "Police and Service", "Justice and Peace", "Integrity and Courage"],
-    answer: 0,
-    explanation: "The motto is 'Service and Protection'."
-  },
-  {
-    question: "Which Nigerian state is the headquarters of the Arewa Consultative Forum?",
-    options: ["Kaduna", "Kano", "Abuja", "Lagos"],
-    answer: 0,
-    explanation: "Arewa Consultative Forum is headquartered in Kaduna."
-  },
-  {
-    question: "Who is the current Minister of Education in Nigeria (2025)?",
-    options: ["Adamu Adamu", "Mallam Isa Ali Pantami", "Godswill Obioma", "Rukayyatu Ahmed Rufa’i"],
-    answer: 3,
-    explanation: "Rukayyatu Ahmed Rufa’i is the Minister of Education as of 2025."
-  },
-  {
-    question: "Which Nigerian city is famous for the Eyo Festival?",
-    options: ["Lagos", "Ibadan", "Calabar", "Enugu"],
-    answer: 0,
-    explanation: "The Eyo Festival is celebrated in Lagos."
-  },
-  {
-    question: "What is the name of Nigeria’s central bank?",
-    options: ["Central Bank of Nigeria", "Nigerian Monetary Authority", "Federal Reserve Bank", "Bank of Nigeria"],
-    answer: 0,
-    explanation: "The Central Bank of Nigeria is the apex bank."
-  },
-  {
-    question: "Which Nigerian state is home to the Yankari National Park?",
-    options: ["Bauchi", "Adamawa", "Taraba", "Gombe"],
-    answer: 0,
-    explanation: "Yankari National Park is located in Bauchi State."
-  },
-  {
-    question: "Who is the Nigerian author of the novel 'Things Fall Apart'?",
-    options: ["Chinua Achebe", "Wole Soyinka", "Chimamanda Ngozi Adichie", "Ben Okri"],
-    answer: 0,
-    explanation: "'Things Fall Apart' was written by Chinua Achebe."
-  },
-  {
-    question: "Which Nigerian city is the headquarters of the Nigerian Ports Authority?",
-    options: ["Lagos", "Port Harcourt", "Calabar", "Warri"],
-    answer: 0,
-    explanation: "The Nigerian Ports Authority is headquartered in Lagos."
-  },
-  {
-    question: "What is Nigeria's population approximately as of 2025?",
-    options: ["220 million", "180 million", "250 million", "200 million"],
-    answer: 0,
-    explanation: "Nigeria’s population is estimated around 220 million."
-  },
-  {
-    question: "Which Nigerian state is the home of the Idanre Hills?",
-    options: ["Ondo", "Ekiti", "Osun", "Ogun"],
-    answer: 0,
-    explanation: "Idanre Hills are located in Ondo State."
-  },
-  {
-    question: "Who is the current Speaker of the Nigerian House of Representatives (2025)?",
-    options: ["Femi Gbajabiamila", "Yakubu Dogara", "Aminu Tambuwal", "Gbajabiamila Femi"],
-    answer: 0,
-    explanation: "Femi Gbajabiamila is the Speaker in 2025."
-  },
-  {
-    question: "Which Nigerian state is known as the 'Land of Honor'?",
-    options: ["Kano", "Adamawa", "Benue", "Kaduna"],
-    answer: 1,
-    explanation: "Adamawa State is called the 'Land of Honor'."
-  },
-  {
-    question: "What is the name of Nigeria’s national youth service program?",
-    options: ["NYSC", "NYP", "NYS", "NYDP"],
-    answer: 0,
-    explanation: "NYSC stands for National Youth Service Corps."
-  },
-  {
-    question: "Which Nigerian city is the headquarters of the Nigerian National Petroleum Corporation (NNPC)?",
-    options: ["Lagos", "Abuja", "Port Harcourt", "Kaduna"],
-    answer: 1,
-    explanation: "NNPC headquarters is in Abuja."
-  },
-  {
-    question: "What is the name of Nigeria’s first satellite launched into space?",
-    options: ["NigeriaSat-1", "NigerSat", "NaijaSat", "SatNigeria"],
-    answer: 0,
-    explanation: "NigeriaSat-1 was the first Nigerian satellite."
-  },
-  {
-    question: "Which Nigerian state is famous for the Argungu Fishing Festival?",
-    options: ["Kebbi", "Sokoto", "Borno", "Kaduna"],
-    answer: 0,
-    explanation: "The Argungu Fishing Festival is held in Kebbi State."
-  },
-  {
-    question: "Who is the current Chief of Army Staff of Nigeria (2025)?",
-    options: ["Lieutenant General Faruk Yahaya", "Tukur Buratai", "Ibrahim Attahiru", "Abayomi Olonisakin"],
-    answer: 0,
-    explanation: "Lieutenant General Faruk Yahaya is the Chief of Army Staff."
-  },
-  {
-    question: "What is the name of Nigeria’s main legislative building?",
-    options: ["National Assembly Complex", "Parliament House", "Federal House", "Senate Building"],
-    answer: 0,
-    explanation: "The National Assembly Complex houses Nigeria’s legislature."
-  },
-  {
-    question: "Which Nigerian city is the headquarters of the Nigerian National Petroleum Corporation (NNPC)?",
-    options: ["Lagos", "Abuja", "Port Harcourt", "Kaduna"],
-    answer: 1,
-    explanation: "NNPC headquarters is in Abuja."
-  },
-  {
-    question: "Which Nigerian state is known as the 'Food Basket of the Nation'?",
-    options: ["Benue", "Kano", "Kaduna", "Niger"],
-    answer: 0,
-    explanation: "Benue State is known as the 'Food Basket of the Nation'."
-  },
-  {
-    question: "Who is the Nigerian author of 'Half of a Yellow Sun'?",
-    options: ["Chimamanda Ngozi Adichie", "Chinua Achebe", "Wole Soyinka", "Ben Okri"],
-    answer: 0,
-    explanation: "'Half of a Yellow Sun' was written by Chimamanda Ngozi Adichie."
-  },
-  {
-    question: "What is the name of the Nigerian national airline that ceased operations in 2003?",
-    options: ["Nigeria Airways", "Arik Air", "Air Peace", "Dana Air"],
-    answer: 0,
-    explanation: "Nigeria Airways ceased operations in 2003."
-  },
-  {
-    question: "Which Nigerian state is famous for the National War Museum?",
-    options: ["Imo", "Anambra", "Enugu", "Ebonyi"],
-    answer: 0,
-    explanation: "The National War Museum is located in Imo State."
-  },
-  {
-    question: "What is the name of Nigeria’s highest mountain?",
-    options: ["Chappal Waddi", "Obudu Mountain", "Mambilla Plateau", "Kano Hills"],
-    answer: 0,
-    explanation: "Chappal Waddi is Nigeria’s highest mountain."
-  },
-  {
-    question: "Which Nigerian city is known as the 'Oil City'?",
-    options: ["Port Harcourt", "Lagos", "Warri", "Calabar"],
-    answer: 0,
-    explanation: "Port Harcourt is called the 'Oil City'."
-  },
-  {
-    question: "Who is the current Nigerian Minister of Finance (2025)?",
-    options: ["Zainab Ahmed", "Kemi Adeosun", "Ngozi Okonjo-Iweala", "Nana Akufo-Addo"],
-    answer: 0,
-    explanation: "Zainab Ahmed is the Minister of Finance."
-  },
-  {
-    question: "Which Nigerian state is home to the famous Olumo Rock?",
-    options: ["Ogun", "Ondo", "Lagos", "Ekiti"],
-    answer: 0,
-    explanation: "Olumo Rock is located in Ogun State."
-  },
-  {
-    question: "What is the name of Nigeria’s national football stadium?",
-    options: ["Teslim Balogun Stadium", "Murtala Muhammed Stadium", "National Stadium Abuja", "Godswill Akpabio International Stadium"],
-    answer: 2,
-    explanation: "The National Stadium in Abuja is Nigeria’s national stadium."
-  },
-  {
-    question: "Which Nigerian city is known as the 'Centre of Commerce'?",
-    options: ["Lagos", "Kano", "Abuja", "Port Harcourt"],
-    answer: 0,
-    explanation: "Lagos is the commercial center of Nigeria."
-  },
-  {
-    question: "Who is the current Nigerian Minister of Health (2025)?",
-    options: ["Osagie Ehanire", "Isaac Adewole", "Chris Ngige", "Peter Obi"],
-    answer: 0,
-    explanation: "Osagie Ehanire is the Minister of Health."
-  },
-  {
-    question: "Which Nigerian state is the home of the famous Aso Rock Presidential Villa?",
-    options: ["Abuja", "Lagos", "Kaduna", "Kano"],
-    answer: 0,
-    explanation: "Aso Rock Presidential Villa is located in Abuja."
-  },
-  {
-    question: "What is the name of Nigeria’s largest seaport?",
-    options: ["Apapa Port", "Tin Can Island Port", "Onne Port", "Calabar Port"],
-    answer: 0,
-    explanation: "Apapa Port is Nigeria’s largest seaport."
-  },
-  {
-    question: "Which Nigerian state is famous for the Osun-Osogbo Sacred Grove?",
-    options: ["Osun", "Oyo", "Ondo", "Ekiti"],
-    answer: 0,
-    explanation: "The Osun-Osogbo Sacred Grove is in Osun State."
-  },
-  {
-    question: "Who is the current Nigerian Minister of Agriculture (2025)?",
-    options: ["Mohammed Nanono", "Akinwumi Adesina", "Audu Ogbeh", "Sabo Nanono"],
-    answer: 0,
-    explanation: "Mohammed Nanono is the Minister of Agriculture."
-  },
-  {
-    question: "Which Nigerian city is known for the National Theatre?",
-    options: ["Lagos", "Abuja", "Port Harcourt", "Enugu"],
-    answer: 0,
-    explanation: "The National Theatre is located in Lagos."
-  },
-  {
-    question: "What is the name of Nigeria’s national airline founded in 2006?",
-    options: ["Arik Air", "Air Peace", "Dana Air", "Med-View Airline"],
-    answer: 0,
-    explanation: "Arik Air was founded in 2006."
-  },
-  {
-    question: "Which Nigerian state is the home of the famous Idanre Hills?",
-    options: ["Ondo", "Ekiti", "Osun", "Ogun"],
-    answer: 0,
-    explanation: "Idanre Hills are located in Ondo State."
-  },
-  {
-    question: "Who is the current Nigerian Minister of Information (2025)?",
-    options: ["Lai Mohammed", "Festus Keyamo", "Chris Ngige", "Abubakar Malami"],
-    answer: 0,
-    explanation: "Lai Mohammed is the Minister of Information."
-  },
-  {
-    question: "Which Nigerian city is known as the 'Jerusalem of Africa'?",
-    options: ["Abeokuta", "Ibadan", "Jos", "Kano"],
-    answer: 2,
-    explanation: "Jos is known as the 'Jerusalem of Africa'."
-  },
-  {
-    question: "What is the name of Nigeria’s national currency?",
-    options: ["Naira", "Dollar", "Pound", "Cedi"],
-    answer: 0,
-    explanation: "Nigeria’s currency is the Naira."
-  },
-  {
-    question: "Which Nigerian state is the home of the famous Agbokim Waterfalls?",
-    options: ["Cross River", "Akwa Ibom", "Rivers", "Bayelsa"],
-    answer: 0,
-    explanation: "Agbokim Waterfalls is located in Cross River State."
-  },
-  {
-    question: "Who is the current Nigerian Minister of Transportation (2025)?",
-    options: ["Rotimi Amaechi", "Chibuike Amaechi", "Amaechi Rotimi", "Godwin Emefiele"],
-    answer: 0,
-    explanation: "Rotimi Amaechi is the Minister of Transportation."
-  },
-  {
-    question: "Which Nigerian city is the headquarters of the Nigerian Customs Service?",
-    options: ["Abuja", "Lagos", "Port Harcourt", "Kano"],
-    answer: 0,
-    explanation: "The Nigerian Customs Service headquarters is in Abuja."
-  },
-  {
-    question: "What is the name of Nigeria’s largest market?",
-    options: ["Balogun Market", "Ariaria Market", "Oshodi Market", "Onitsha Market"],
-    answer: 3,
-    explanation: "Onitsha Market is the largest market in Nigeria."
-  },
-  {
-    question: "Which Nigerian state is the home of the famous Erin-Ijesha Waterfalls?",
-    options: ["Osun", "Ondo", "Ekiti", "Ogun"],
-    answer: 0,
-    explanation: "Erin-Ijesha Waterfalls is located in Osun State."
-  },
-  {
-    question: "Who is the current Nigerian Minister of Power (2025)?",
-    options: ["Abubakar Aliyu", "Saleh Mamman", "Babatunde Fashola", "Chinedu Nebo"],
-    answer: 2,
-    explanation: "Babatunde Fashola is the Minister of Power."
-  },
-  {
-    question: "Which Nigerian city is the headquarters of the Nigerian National Petroleum Corporation (NNPC)?",
-    options: ["Lagos", "Abuja", "Port Harcourt", "Kaduna"],
-    answer: 1,
-    explanation: "NNPC headquarters is in Abuja."
-  },
-
-  ],
-};
-
-
-
-    // --- GLOBAL VARIABLES ---
-    let currentSubject = null;
-    let currentQuestions = [];
-    let currentIndex = 0;
-    let score = 0;
-    let timer = null;
-    let timeLeft = 0;
-    let quizDuration = 30 * 60; // default 30 mins
-
-    // --- ELEMENTS ---
-    const subjectSelect = document.getElementById('subjectSelect');
-    const quizInterface = document.getElementById('quizInterface');
-    const questionContainer = document.getElementById('questionContainer');
-    const questionNumber = document.getElementById('questionNumber');
-    const questionCategory = document.getElementById('questionCategory');
-    const questionText = document.getElementById('questionText');
-    const optionsGrid = document.getElementById('optionsGrid');
-    const explanation = document.getElementById('explanation');
-    const nextBtn = document.getElementById('nextBtn');
-    const timerDisplay = document.getElementById('timer');
-    const progressBar = document.getElementById('progressBar');
-    const scoreSummary = document.getElementById('scoreSummary');
-    const restartBtn = document.getElementById('restartBtn');
-    const quizTimeInput = document.getElementById('quizTime');
-    const quitBtn = document.getElementById('quitBtn');
-
-    // --- SUBJECT SELECTION ---
-    document.querySelectorAll('.subject-card').forEach(btn => {
-      btn.onclick = () => {
-        currentSubject = btn.dataset.subject;
-        quizDuration = Math.max(1, parseInt(quizTimeInput.value,10)||30) * 60;
-        startQuiz();
-      }
+    // JavaScript to redirect to index.html on button click
+    document.getElementById('startBtn').addEventListener('click', () => {
+      window.location.href = 'indexs.html';
     });
-
-    // --- QUIZ LOGIC ---
-    function startQuiz() {
-      // Prepare questions
-      currentQuestions = shuffleArray(questions[currentSubject]).slice(0, 50);
-      currentIndex = 0;
-      score = 0;
-      subjectSelect.style.display = 'none';
-      quizInterface.style.display = 'flex';
-      scoreSummary.style.display = 'none';
-      restartBtn.style.display = 'none';
-      nextBtn.style.display = 'none';
-      showQuestion();
-      startTimer(quizDuration);
-    }
- 
-
-    function showQuestion() {
-      const q = currentQuestions[currentIndex];
-      questionNumber.textContent = `Q${currentIndex+1}`;
-      questionCategory.textContent = capitalize(currentSubject);
-      questionText.textContent = q.question;
-      optionsGrid.innerHTML = '';
-      explanation.style.display = 'none';
-      q.options.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.textContent = opt;
-        btn.onclick = () => selectOption(idx, btn);
-        optionsGrid.appendChild(btn);
-      });
-      updateProgress();
-    }
-
-    function selectOption(idx, btn) {
-      // Prevent double answer
-      if (optionsGrid.querySelector('.option-btn.correct, .option-btn.wrong')) return;
-      const q = currentQuestions[currentIndex];
-      if (idx === q.answer) {
-        btn.classList.add('correct');
-        score++;
-      } else {
-        btn.classList.add('wrong');
-        optionsGrid.children[q.answer].classList.add('correct');
-      }
-      explanation.textContent = q.explanation || '';
-      explanation.style.display = 'block';
-      nextBtn.style.display = 'block';
-      if (currentIndex === currentQuestions.length-1) nextBtn.textContent = "Finish";
-      else nextBtn.textContent = "Next";
-    }
-
-    nextBtn.onclick = () => {
-      currentIndex++;
-      if (currentIndex < currentQuestions.length) {
-        showQuestion();
-        nextBtn.style.display = 'none';
-      } else {
-        endQuiz();
-      }
-    };
-
-    function endQuiz() {
-      clearInterval(timer);
-      quizInterface.style.display = 'flex';
-      questionContainer.style.display = 'none';
-      nextBtn.style.display = 'none';
-      progressBar.style.width = '100%';
-      scoreSummary.style.display = 'block';
-      scoreSummary.innerHTML = `
-        <strong>Quiz Completed!</strong><br>
-        Subject: ${capitalize(currentSubject)}<br>
-        Score: <span style="color:#fff">${score}</span> / ${currentQuestions.length}<br>
-        <span style="font-size:1.1em; color:#ffe082;">
-          ${score >= currentQuestions.length*0.7 ? "🎉 Excellent!" : (score >= currentQuestions.length*0.4 ? "👍 Good Try!" : "Keep Practicing!")}
-        </span>
-      `;
-      restartBtn.style.display = 'block';
-    }
-
-    restartBtn.onclick = () => {
-      questionContainer.style.display = 'block';
-      startQuiz();
-    };
-
-    quitBtn.onclick = () => {
-      questionContainer.style.display = 'block';
-      endQuiz();
-    };
-
-    // --- TIMER ---
-    function startTimer(duration) {
-      clearInterval(timer);
-      timeLeft = duration;
-      updateTimerDisplay();
-      timer = setInterval(() => {
-        timeLeft--;
-        updateTimerDisplay();
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          endQuiz();
-        }
-      }, 1000);
-    }
-
-    function updateTimerDisplay() {
-      let min = Math.floor(timeLeft/60);
-      let sec = timeLeft%60;
-      timerDisplay.textContent = `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
-      // Animate timer color if < 1 min
-      timerDisplay.style.background = (timeLeft < 60) ? "#e53935" : "#263238";
-    }
-
-    // --- PROGRESS BAR ---
-    function updateProgress() {
-      progressBar.style.width = `${((currentIndex)/currentQuestions.length)*100}%`;
-    }
-
-    // --- UTILS ---
-    function shuffleArray(arr) {
-      let a = arr.slice();
-      for (let i = a.length-1; i > 0; i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    // --- CALCULATOR ---
-    function toggleCalculator() {
-      document.getElementById('calculator').classList.toggle('active');
-    }
-    let calcStr = '';
-    function calcInput(val) {
-      calcStr += val;
-      document.getElementById('calcDisplay').value = calcStr;
-    }
-    function calcClear() {
-      calcStr = '';
-      document.getElementById('calcDisplay').value = '';
-    }
-    function calcEquals() {
-      try {
-        let result = eval(calcStr.replace(/÷/g,'/').replace(/×/g,'*').replace(/−/g,'-'));
-        document.getElementById('calcDisplay').value = result;
-        calcStr = result.toString();
-      } catch {
-        document.getElementById('calcDisplay').value = 'Error';
-        calcStr = '';
-      }
-    }
-
-    // --- INITIAL STATE ---
-    quizInterface.style.display = 'none';
-    questionContainer.style.display = 'block';
-
-    // --- CLOSE CALCULATOR ON OUTSIDE CLICK ---
-    document.addEventListener('mousedown', function(e){
-      let calc = document.getElementById('calculator');
-      if (calc.classList.contains('active') && !calc.contains(e.target) && e.target.id !== 'calc-btn') {
-        calc.classList.remove('active');
-      }
-    });
-
-    // --- PREVENT FORM SUBMIT ON ENTER IN TIMER INPUT ---
-    quizTimeInput.addEventListener('keydown', function(e){
-      if (e.key === 'Enter') e.preventDefault();
-    });
-
   </script>
 </body>
 </html>
